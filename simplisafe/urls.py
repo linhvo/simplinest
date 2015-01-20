@@ -9,4 +9,6 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^simplisafe/away', 'core.views.simplisafe_away', name='simplisafe_away'),
+    url(r'^simplisafe/login', 'core.views.simplisafe_login', name='simplisafe_login')
 )
