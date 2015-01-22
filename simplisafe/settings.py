@@ -105,7 +105,7 @@ MONGO_DATABASES = {
         'USERNAME': os.environ.get('MONGO_USERNAME'),
         'PASSWORD': os.environ.get('MONGO_PASSWORD'),
         'HOST': os.environ.get('MONGO_HOST'),
-        'PORT': os.environ.get('MONGO_PORT'),
+        'PORT': int(os.environ.get('MONGO_PORT')),
     },
 }
 
