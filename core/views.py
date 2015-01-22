@@ -1,4 +1,5 @@
 import json
+import os
 from django.http import HttpResponse
 import requests
 from core.models import User, Location
@@ -23,8 +24,8 @@ def simplisafe_away(request):
 
 
 def simplisafe_login():
-    login_request_data = {"name": "trungduyvu@gmail.com",
-                    "pass": "HR3KYPnqQQc^nfisDHUA,2s",
+    login_request_data = {"name": os.environ.get('SIMPLISAFE_USERNAME'),
+                    "pass": os.environ.get('SIMPLISAFE_PASSWORD'),
                     "device_uuid": "51644e80-1b62-11e3-b773-0800200c9a66",
                     "no_persist": 1,
                     "version": "1200"}
