@@ -1,1 +1,3 @@
 .idea
+/simplisafe/local_settings.py
+*.pyc

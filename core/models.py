@@ -1,5 +1,4 @@
 from mongoengine import *
-connect('simplisafe')
 
 class User(Document):
     name = StringField()

@@ -9,8 +9,22 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+
+MONGO_DATABASES = {
+    'default': {
+        'NAME': 'simplisafe',
+        'USERNAME': 'heroku_app33361560',
+        'PASSWORD': '2qc861lfturidrgd7icphfrnca',
+        'HOST': 'ds031641.mongolab.com',
+        'PORT': 31641,
+    },
+}
+
 import os
 import dj_database_url
+from mongoengine import connect
+from local_settings import *
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -94,3 +108,15 @@ STATIC_URL = '/static/'
 AUTHENTICATION_BACKENDS = (
     'mongoengine.django.auth.MongoEngineBackend',
 )
+
+
+for i, key_value in enumerate(MONGO_DATABASES.items()):
+    key, value = key_value
+    connect(
+        key,
+        username=str(value['USERNAME']),
+        password=value['PASSWORD'],
+        host=value['HOST'],
+        port=value['PORT'],
+
+    )
