@@ -99,7 +99,15 @@ AUTHENTICATION_BACKENDS = (
     'mongoengine.django.auth.MongoEngineBackend',
 )
 
-from local_settings import *
+MONGO_DATABASES = {
+    'default': {
+        'NAME': os.environ.get('MONGO_DB'),
+        'USERNAME': os.environ.get('MONGO_USERNAME'),
+        'PASSWORD': os.environ.get('MONGO_PASSWORD'),
+        'HOST': os.environ.get('MONGO_HOST'),
+        'PORT': os.environ.get('MONGO_PORT'),
+    },
+}
 
 for i, key_value in enumerate(MONGO_DATABASES.items()):
     key, value = key_value
@@ -111,14 +119,3 @@ for i, key_value in enumerate(MONGO_DATABASES.items()):
         port=value['PORT'],
 
     )
-
-
-MONGO_DATABASES = {
-    'default': {
-        'NAME': 'simplisafe',
-        'USERNAME': 'heroku_app33361560',
-        'PASSWORD': '2qc861lfturidrgd7icphfrnca',
-        'HOST': 'ds031641.mongolab.com',
-        'PORT': 31641,
-    },
-}
