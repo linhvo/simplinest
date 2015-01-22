@@ -1,9 +1,11 @@
 import json
+import logging
 import os
 from django.http import HttpResponse
 import requests
 from core.models import User, Location
 
+logger = logging.getLogger(__name__)
 
 def simplisafe_away(request):
     cookie_dict, uid = simplisafe_login()
@@ -12,8 +14,12 @@ def simplisafe_away(request):
                          data=location_data, cookies=cookie_dict)
     for key in json.loads(location_resp.content)['locations'].keys():
         if key:
-            lid = Location(lid = key)
-            lid.save()
+            try:
+                lid = Location(lid = key)
+                lid.save()
+            except Exception as ex:
+                logger.error(ex)
+
 
     lid = Location.objects.first().lid
     set_away_data = {"state": "away", "mobile": 1, "no_persist": 1, "XDEBUG_SESSION_START": "session_name"}
