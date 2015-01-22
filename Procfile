@@ -1,0 +1,1 @@
+web: gunicorn simplisafe.wsgi --log-file -
