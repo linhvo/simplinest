@@ -111,8 +111,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 MONGO_DATABASES = {
-    'default': {
-        'NAME': os.environ.get('MONGO_DB'),
+    os.environ.get('MONGO_DB'): {
         'USERNAME': os.environ.get('MONGO_USERNAME'),
         'PASSWORD': os.environ.get('MONGO_PASSWORD'),
         'HOST': os.environ.get('MONGO_HOST'),
