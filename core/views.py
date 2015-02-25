@@ -1,11 +1,16 @@
 import json
 import logging
 import os
+import datetime
+from django.dispatch import receiver
 from django.http import HttpResponse
 import requests
+import oauth2 as oauth
 from core.models import User, Location
+from django.db.models.signals import pre_save
 
 logger = logging.getLogger(__name__)
+
 
 def simplisafe_away(request):
     cookie_dict, uid = simplisafe_login()
@@ -46,6 +51,6 @@ def simplisafe_login():
     cookie_dict[cookie_key] = cookie_value
     return cookie_dict, uid
 
-def get_location(request):
 
-    pass
+
+

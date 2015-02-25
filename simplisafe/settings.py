@@ -16,9 +16,6 @@ from mongoengine import connect
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
-
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
@@ -26,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = 'bxi5#k84^61idr))s+p&_a6s4a!!vs(n_jl=+h!vf^$=03prv@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', False)
 
 TEMPLATE_DEBUG = True
 
