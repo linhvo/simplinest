@@ -1,13 +1,12 @@
 import json
 import logging
 import os
-import datetime
-from django.dispatch import receiver
+
 from django.http import HttpResponse
 import requests
 import oauth2 as oauth
 from core.models import User, Location
-from django.db.models.signals import pre_save
+from django.shortcuts import render_to_response, render
 
 logger = logging.getLogger(__name__)
 
@@ -50,6 +49,10 @@ def simplisafe_login():
     cookie_dict = dict()
     cookie_dict[cookie_key] = cookie_value
     return cookie_dict, uid
+
+def login(request):
+    return render(request, "login.html")
+
 
 
 
