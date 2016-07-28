@@ -4,7 +4,6 @@ import os
 
 from django.http import HttpResponse
 import requests
-import oauth2 as oauth
 from core.models import User, Location
 from django.shortcuts import render_to_response, render
 
@@ -12,11 +11,13 @@ logger = logging.getLogger(__name__)
 
 
 def simplisafe_away(request):
+    logger.info('GET %s' % request.get_full_path())
     cookie_dict, uid = simplisafe_login()
     location_data = {"no_persist": 1, "XDEBUG_SESSION_START": "session_name"}
     location_resp = requests.post('https://simplisafe.com/mobile/%s/locations' % uid,
                          data=location_data, cookies=cookie_dict)
-    for key in json.loads(location_resp.content)['locations'].keys():
+    logger.info('Location Info: %s' % location_resp.json())
+    for key in location_resp.json()['locations'].keys():
         if key:
             try:
                 lid = Location(lid = key)
@@ -34,18 +35,20 @@ def simplisafe_away(request):
 
 
 def simplisafe_login():
+    logger.info('Logging in Simplisafe')
     login_request_data = {"name": os.environ.get('SIMPLISAFE_USERNAME'),
                     "pass": os.environ.get('SIMPLISAFE_PASSWORD'),
                     "device_uuid": "51644e80-1b62-11e3-b773-0800200c9a66",
                     "no_persist": 1,
                     "version": "1200"}
 
-    location_resp = requests.post('https://simplisafe.com/mobile/login/', data=login_request_data)
-    data = json.loads(location_resp.content)
+    login_info = requests.post('https://simplisafe.com/mobile/login/', data=login_request_data)
+    data = login_info.json()
+    logger.info('Login Info: %s' % data)
     uid = data['uid']
 
-    cookie_key = location_resp.cookies.keys()[1]
-    cookie_value = location_resp.cookies[cookie_key]
+    cookie_key = login_info.cookies.keys()[1]
+    cookie_value = login_info.cookies[cookie_key]
     cookie_dict = dict()
     cookie_dict[cookie_key] = cookie_value
     return cookie_dict, uid
