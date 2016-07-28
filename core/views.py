@@ -11,12 +11,12 @@ logger = logging.getLogger(__name__)
 
 
 def simplisafe_away(request):
-    logger.info('GET %s' % request.get_full_path())
+    print ('GET %s' % request.get_full_path())
     cookie_dict, uid = simplisafe_login()
     location_data = {"no_persist": 1, "XDEBUG_SESSION_START": "session_name"}
     location_resp = requests.post('https://simplisafe.com/mobile/%s/locations' % uid,
                          data=location_data, cookies=cookie_dict)
-    logger.info('Location Info: %s' % location_resp.json())
+    print ('Location Info: %s' % location_resp.json())
     for key in location_resp.json()['locations'].keys():
         if key:
             try:
@@ -24,6 +24,7 @@ def simplisafe_away(request):
                 lid.save()
             except Exception as ex:
                 logger.error(ex)
+                print ex
 
 
     lid = Location.objects.first().lid
@@ -31,6 +32,7 @@ def simplisafe_away(request):
 
     status_res = requests.post('https://simplisafe.com/mobile/%s/sid/%s/set-state' % (uid, lid),
                               data=set_away_data, cookies=cookie_dict)
+    print status_res.json()
     return HttpResponse(status_res, content_type="application/json")
 
 
@@ -44,7 +46,7 @@ def simplisafe_login():
 
     login_info = requests.post('https://simplisafe.com/mobile/login/', data=login_request_data)
     data = login_info.json()
-    logger.info('Login Info: %s' % data)
+    print ('Login Info: %s' % data)
     uid = data['uid']
 
     cookie_key = login_info.cookies.keys()[1]
