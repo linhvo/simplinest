@@ -55,8 +55,9 @@ def simplisafe_login():
     cookie_dict[cookie_key] = cookie_value
     return cookie_dict, uid
 
-def login(request):
-    return render(request, "login.html")
+
+def home(request):
+    return HttpResponse("login.html")
 
 
 
