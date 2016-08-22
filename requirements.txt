@@ -2,8 +2,9 @@ Django==1.9.4
 wsgiref==0.1.2
 dj-database-url
 dj_static==0.0.6
-mongoengine==0.8.7
+mongoengine==0.10.6
+psycopg2==2.6.2
 gunicorn==19.1.1
 static==0.4
 requests==2.5.1
-git+https://github.com/linhvo/python-oauth2.git@a83f4a297336b631e75cba102910c19231518159
+git+https://github.com/linhvo/python-oauth2.git@a83f4a297336b631e75cba102910c19req231518159

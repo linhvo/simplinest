@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 
 import os
-from mongoengine import connect
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -78,18 +77,22 @@ WSGI_APPLICATION = 'simplisafe.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.dummy'
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'simplinest',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.dummy'
+#     }
+# }
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
@@ -120,26 +123,57 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
-AUTHENTICATION_BACKENDS = (
-    'mongoengine.django.auth.MongoEngineBackend',
-)
+# AUTHENTICATION_BACKENDS = (
+#     'mongoengine.django.auth.MongoEngineBackend',
+# )
+#
+# MONGO_DATABASES = {
+#     os.environ.get('MONGO_DB'): {
+#         'USERNAME': os.environ.get('MONGO_USERNAME'),
+#         'PASSWORD': os.environ.get('MONGO_PASSWORD'),
+#         'HOST': os.environ.get('MONGO_HOST'),
+#         'PORT': int(os.environ.get('MONGO_PORT')),
+#     },
+# }
 
-MONGO_DATABASES = {
-    os.environ.get('MONGO_DB'): {
-        'USERNAME': os.environ.get('MONGO_USERNAME'),
-        'PASSWORD': os.environ.get('MONGO_PASSWORD'),
-        'HOST': os.environ.get('MONGO_HOST'),
-        'PORT': int(os.environ.get('MONGO_PORT')),
+# for i, key_value in enumerate(MONGO_DATABASES.items()):
+#     key, value = key_value
+#     connect(
+#         key,
+#         username=str(value['USERNAME']),
+#         password=value['PASSWORD'],
+#         host=value['HOST'],
+#         port=value['PORT'],
+#
+#     )
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '%(asctime)s [%(levelname)s] %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+            'level': 'DEBUG'
+        },
+    },
+    'loggers': {
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        # Catch All Logger -- Captures any other logging
+        '': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        }
     },
 }
 
-for i, key_value in enumerate(MONGO_DATABASES.items()):
-    key, value = key_value
-    connect(
-        key,
-        username=str(value['USERNAME']),
-        password=value['PASSWORD'],
-        host=value['HOST'],
-        port=value['PORT'],
-
-    )
+from local_settings import *
