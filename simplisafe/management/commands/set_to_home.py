@@ -6,9 +6,11 @@ from core.models import NestAuth, Device
 
 class Command(BaseCommand):
     help = 'Set thermostate to home'
-    
+
     def handle(self, *args, **options):
         auth = NestAuth.objects.first()
+        if not auth:
+            return 
         if not auth.access_token:
             access_token = self.get_access_token(auth)
             auth.access_token = access_token
