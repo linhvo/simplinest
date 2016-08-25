@@ -13,7 +13,7 @@ class NestAuth(models.Model):
     auth_code = models.CharField(max_length=255)
 
 
-class Devices(models.Model):
+class Device(models.Model):
     structure_id = models.CharField(max_length=255)
     auth = models.ForeignKey(NestAuth, name='nest_auth')
 
