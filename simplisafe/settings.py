@@ -27,7 +27,8 @@ DEBUG = os.environ.get('DEBUG', False)
 TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
+import dj_database_url
+db_from_env = dj_database_url.config()
 
 
 # Application definition
@@ -87,6 +88,8 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+DATABASES['default'].update(db_from_env)
 
 # DATABASES = {
 #     'default': {
@@ -175,5 +178,3 @@ LOGGING = {
         }
     },
 }
-
-from local_settings import *
