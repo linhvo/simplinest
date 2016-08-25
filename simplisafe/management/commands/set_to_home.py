@@ -10,7 +10,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         auth = NestAuth.objects.first()
         if not auth:
-            return 
+            return
         if not auth.access_token:
             access_token = self.get_access_token(auth)
             auth.access_token = access_token
@@ -20,7 +20,7 @@ class Command(BaseCommand):
         device = Device.objects.get(nest_auth=auth)
         structure_id = device.structure_id
         url = "https://developer-api.nest.com/structures/%s/away?auth=%s" % (structure_id, auth.access_token)
-        res = requests.put(url, content_type='application/json', data="home")
+        res = requests.put(url, json="home")
         print (res.status_code, res.json())
 
     def get_access_token(self, auth):
