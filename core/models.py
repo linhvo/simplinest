@@ -13,6 +13,11 @@ class NestAuth(models.Model):
     auth_code = models.CharField(max_length=255)
 
 
+class Devices(models.Model):
+    structure_id = models.CharField(max_length=255)
+    auth = models.ForeignKey(NestAuth, name='nest_auth')
+    
+
 class NestUser(models.Model):
     nest_access_token = models.CharField(max_length=255)
     nest_status = models.CharField(max_length=255)

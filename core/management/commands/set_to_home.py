@@ -15,7 +15,9 @@ class Command(BaseCommand):
             auth.access_token = access_token
             auth.save()
 
-        url = "https://developer-api.nest.com/structures/g-9y-2xkHpBh1MGkVaqXOGJiKOB9MkoW1hhYyQk2vAunCK8a731jbg/away?auth=<AUTH_TOKEN>"
+        url = "https://developer-api.nest.com/structures/%s/away?auth=%s" % (auth.client_id, auth.access_token)
+        res = requests.put(url, content_type='application/json', data={'away': 'home'})
+        print (res.status_code, res.json())
         # curl - v - L - X
         # PUT
         # "https://developer-api.nest.com/structures/g-9y-2xkHpBh1MGkVaqXOGJiKOB9MkoW1hhYyQk2vAunCK8a731jbg/away?auth=<AUTH_TOKEN>" - H
