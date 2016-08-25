@@ -16,7 +16,7 @@ class NestAuth(models.Model):
 class Devices(models.Model):
     structure_id = models.CharField(max_length=255)
     auth = models.ForeignKey(NestAuth, name='nest_auth')
-    
+
 
 class NestUser(models.Model):
     nest_access_token = models.CharField(max_length=255)
