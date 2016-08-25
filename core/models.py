@@ -7,7 +7,7 @@ class Location(models.Model):
 
 class NestAuth(models.Model):
     access_token = models.CharField(max_length=255)
-    expiration = models.DateTimeField()
+    expiration = models.DateTimeField(null=True, blank=True)
     client_id = models.CharField(max_length=255)
     client_secret = models.CharField(max_length=255)
     auth_code = models.CharField(max_length=255)
