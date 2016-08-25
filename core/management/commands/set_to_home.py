@@ -1,13 +1,12 @@
 from django.core.management import BaseCommand
 import requests
-import json
-from django.http import HttpResponse
 
-from core.models import NestAuth
+from core.models import NestAuth, Device
 
 
 class Command(BaseCommand):
     help = 'Set thermostate to home'
+    
     def handle(self, *args, **options):
         auth = NestAuth.objects.first()
         if not auth.access_token:
@@ -15,14 +14,13 @@ class Command(BaseCommand):
             auth.access_token = access_token
             auth.save()
 
-        url = "https://developer-api.nest.com/structures/%s/away?auth=%s" % (auth.client_id, auth.access_token)
-        res = requests.put(url, content_type='application/json', data={'away': 'home'})
+
+        device = Device.objects.get(nest_auth=auth)
+        structure_id = device.structure_id
+        url = "https://developer-api.nest.com/structures/%s/away?auth=%s" % (structure_id, auth.access_token)
+        res = requests.put(url, content_type='application/json', data="home")
         print (res.status_code, res.json())
-        # curl - v - L - X
-        # PUT
-        # "https://developer-api.nest.com/structures/g-9y-2xkHpBh1MGkVaqXOGJiKOB9MkoW1hhYyQk2vAunCK8a731jbg/away?auth=<AUTH_TOKEN>" - H
-        # "Content-Type: application/json" - d
-        # '"away"'
+
     def get_access_token(self, auth):
         auth_code = auth.auth_code
         client_id = auth.client_id
