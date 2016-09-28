@@ -69,7 +69,7 @@ def set_vacation(request):
         return HttpResponse('Turn On Vacation', status=200)
     else:
         if not device.vacation_mode:
-            return
+            return HttpResponse('Vacation is off already', status=200)
         else:
             device.vacation_mode = False
             device.save()
