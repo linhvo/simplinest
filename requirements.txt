@@ -7,3 +7,4 @@ psycopg2==2.6.2
 gunicorn==19.1.1
 static==0.4
 requests==2.5.1
+ipython==5.1.0
