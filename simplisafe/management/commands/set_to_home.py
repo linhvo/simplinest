@@ -1,3 +1,4 @@
+import datetime
 from django.core.management import BaseCommand
 import requests
 
@@ -16,8 +17,10 @@ class Command(BaseCommand):
             auth.access_token = access_token
             auth.save()
 
-
         device = Device.objects.get(nest_auth=auth)
+        date_of_week = datetime.datetime.now().strftime('%a')
+        if date_of_week == 'Sat' or date_of_week == 'Sun' or device.vacation_mode:
+            return
         structure_id = device.structure_id
         url = "https://developer-api.nest.com/structures/%s/away?auth=%s" % (structure_id, auth.access_token)
         res = requests.put(url, json="home")

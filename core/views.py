@@ -5,7 +5,7 @@ import os
 from django.http import Http404
 from django.http import HttpResponse
 import requests
-from core.models import NestUser, Location
+from core.models import NestUser, Location, NestAuth, Device
 from django.shortcuts import render_to_response, render
 
 logger = logging.getLogger(__name__)
@@ -25,12 +25,6 @@ def simplisafe_away(request):
         else:
             print location_resp.json()
             continue
-            # try:
-            #     lid = Location(lid=key)
-            #     lid.save()
-            # except Exception as ex:
-            #     logger.error(ex)
-            #     print ex
 
     if not lid:
         return Http404('No Location Id')
@@ -63,6 +57,28 @@ def simplisafe_login():
 
 def home(request):
     return HttpResponse("login.html")
+
+
+def set_vacation(request):
+    active = request.GET['active']
+    auth = NestAuth.objects.first()
+    device = Device.objects.get(nest_auth=auth)
+    if active == 'on':
+        device.vacation_mode = True
+        device.save()
+        return HttpResponse('Turn On Vacation', status=200)
+    else:
+        if not device.vacation_mode:
+            return
+        else:
+            device.vacation_mode = False
+            device.save()
+            return HttpResponse('Turn Off Vacation', status=200)
+
+
+
+
+
 
 
 

@@ -16,6 +16,7 @@ class NestAuth(models.Model):
 class Device(models.Model):
     structure_id = models.CharField(max_length=255)
     auth = models.ForeignKey(NestAuth, name='nest_auth')
+    vacation_mode = models.BooleanField(default=False)
 
 
 class NestUser(models.Model):
