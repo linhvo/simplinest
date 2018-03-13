@@ -1,10 +1,6 @@
 from django.db import models
 
 
-class Location(models.Model):
-    lid = models.CharField(max_length=255)
-
-
 class NestAuth(models.Model):
     access_token = models.CharField(max_length=255)
     expiration = models.DateTimeField(null=True, blank=True)
@@ -23,6 +19,9 @@ class NestUser(models.Model):
     nest_access_token = models.CharField(max_length=255)
     nest_status = models.CharField(max_length=255)
     created_time = models.DateTimeField(auto_now_add=True)
+
+class Location(models.Model):
+    lid = models.CharField(max_length=255)
 
 
 

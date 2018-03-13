@@ -5,34 +5,41 @@ import os
 from django.http import Http404
 from django.http import HttpResponse
 import requests
-from core.models import NestUser, Location, NestAuth, Device
+from core.models import Location, NestAuth, Device
 from django.shortcuts import render_to_response, render
 
 logger = logging.getLogger(__name__)
 
 
 def simplisafe_away(request):
-    print ('GET %s' % request.get_full_path())
+    print('GET %s' % request.get_full_path())
+    status_res = set_simplisafe_state('away')
+    if not status_res:
+        return Http404('No Location Id')
+    return HttpResponse(status_res, content_type="application/json")
+
+
+def set_simplisafe_state(state):
     cookie_dict, uid = simplisafe_login()
     location_data = {"no_persist": 0, "XDEBUG_SESSION_START": "session_name"}
     location_resp = requests.post('https://simplisafe.com/mobile/%s/locations' % uid,
-                         data=location_data, cookies=cookie_dict)
-    print ('Location Info: %s' % location_resp.json())
+                                  data=location_data, cookies=cookie_dict)
+    print('Location Info: %s' % location_resp.json())
     lid = None
     for key in location_resp.json()['locations'].keys():
         if key:
             lid = Location.objects.get_or_create(lid=key)[0]
         else:
-            print location_resp.json()
+            print(location_resp.json())
             continue
 
     if not lid:
-        return Http404('No Location Id')
-    set_away_data = {"state": "away", "mobile": 1, "no_persist": 0, "XDEBUG_SESSION_START": "session_name"}
+        return None
+    set_state = {"state": state, "mobile": 1, "no_persist": 0, "XDEBUG_SESSION_START": "session_name"}
+    print('Setting state: %s', set_state)
     status_res = requests.post('https://simplisafe.com/mobile/%s/sid/%s/set-state' % (uid, lid.lid),
-                                data=set_away_data, cookies=cookie_dict)
-    print status_res.json()
-    return HttpResponse(status_res, content_type="application/json")
+                               data=set_state, cookies=cookie_dict)
+    return status_res
 
 
 def simplisafe_login():

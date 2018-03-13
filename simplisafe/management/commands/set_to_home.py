@@ -6,7 +6,7 @@ from core.models import NestAuth, Device
 
 
 class Command(BaseCommand):
-    help = 'Set thermostate to home'
+    help = 'Set thermostat to home'
 
     def handle(self, *args, **options):
         auth = NestAuth.objects.first()
