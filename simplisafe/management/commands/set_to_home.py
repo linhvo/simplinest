@@ -23,8 +23,10 @@ class Command(BaseCommand):
             print ('Do not turn Nest on')
             return
         structure_id = device.structure_id
-        url = "https://developer-api.nest.com/structures/%s/away?auth=%s" % (structure_id, auth.access_token)
-        res = requests.put(url, json="home")
+        headers = {"Content-Type: application/json", "Authorization: Bearer %s" % auth.access_token}
+        # url = "https://developer-api.nest.com/structures/%s/away?auth=%s" % (structure_id, auth.access_token)
+        url = "https://developer-api.nest.com/structures/%s" % (structure_id)
+        res = requests.put(url, headers=headers, json={"away": "home"})
         print (res.status_code, res.json())
 
     def get_access_token(self, auth):
