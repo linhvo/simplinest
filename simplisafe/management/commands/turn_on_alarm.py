@@ -11,5 +11,5 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         print('Turning on alarm')
-        // res = set_simplisafe_state('home')
-        // print(res.json())
+        res = set_simplisafe_state('home')
+        print(res.json())
