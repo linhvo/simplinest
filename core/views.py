@@ -24,14 +24,18 @@ def set_simplisafe_state(state):
     location_data = {"no_persist": 0, "XDEBUG_SESSION_START": "session_name"}
     location_resp = requests.post('https://simplisafe.com/mobile/%s/locations' % uid,
                                   data=location_data, cookies=cookie_dict)
-    print('Location Info: %s' % location_resp.json())
-    lid = None
-    for key in location_resp.json()['locations'].keys():
-        if key:
-            lid = Location.objects.get_or_create(lid=key)[0]
-        else:
-            print(location_resp.json())
-            continue
+    if location_resp.status_code == 201:
+        lid = None
+        print('Location Info: %s' % location_resp.json())
+        for key in location_resp.json()['locations'].keys():
+            if key:
+                lid = Location.objects.get_or_create(lid=key)[0]
+            else:
+                print(location_resp.json())
+                continue
+    else:
+        print('Error location:%s' % location_resp.content )
+
 
     if not lid:
         return None
