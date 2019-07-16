@@ -20,12 +20,12 @@ def simplisafe_away(request):
 
 
 def set_simplisafe_state(state):
-    cookie_dict, uid = simplisafe_login()
-    location_data = {"no_persist": 0, "XDEBUG_SESSION_START": "session_name"}
+    cookie_dict, uid, session_name = simplisafe_login()
+    location_data = {"no_persist": 0, "XDEBUG_SESSION_START": session_name}
     location_resp = requests.post('https://simplisafe.com/mobile/%s/locations' % uid,
                                   data=location_data, cookies=cookie_dict)
+    lid = None
     if location_resp.status_code == 200:
-        lid = None
         print('Location Info: %s' % location_resp.json())
         for key in location_resp.json()['locations'].keys():
             if key:
@@ -39,6 +39,7 @@ def set_simplisafe_state(state):
 
     if not lid:
         return None
+
     set_state = {"state": state, "mobile": 1, "no_persist": 0, "XDEBUG_SESSION_START": "session_name"}
     print('Setting state: %s', set_state)
     status_res = requests.post('https://simplisafe.com/mobile/%s/sid/%s/set-state' % (uid, lid.lid),
@@ -58,12 +59,13 @@ def simplisafe_login():
     data = login_info.json()
     print ('Login Info: %s' % data)
     uid = data.get('uid')
+    session_name = data.get('session')
 
     cookie_key = login_info.cookies.keys()[1]
     cookie_value = login_info.cookies[cookie_key]
     cookie_dict = dict()
     cookie_dict[cookie_key] = cookie_value
-    return cookie_dict, uid
+    return cookie_dict, uid, session_name
 
 
 def home(request):
