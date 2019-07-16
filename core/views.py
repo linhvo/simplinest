@@ -34,7 +34,7 @@ def set_simplisafe_state(state):
                 print(location_resp.json())
                 continue
     else:
-        print('Error location:%s' % location_resp.content )
+        print('Error location:%s' % location_resp.status_code )
 
 
     if not lid:
