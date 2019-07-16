@@ -57,7 +57,7 @@ def simplisafe_login():
 
     login_info = requests.post('https://simplisafe.com/mobile/login/', data=login_request_data)
     data = login_info.json()
-    print ('Login Info: %s' % data)
+
     uid = data.get('uid')
     session_name = data.get('session')
 
@@ -65,6 +65,7 @@ def simplisafe_login():
     cookie_value = login_info.cookies[cookie_key]
     cookie_dict = dict()
     cookie_dict[cookie_key] = cookie_value
+    print('Login Info: %s, Cookie: %s' % (data, cookie_dict))
     return cookie_dict, uid, session_name
 
 
