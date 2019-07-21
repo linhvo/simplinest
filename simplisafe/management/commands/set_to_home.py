@@ -20,12 +20,12 @@ class Command(BaseCommand):
         device = Device.objects.get(nest_auth=auth)
         date_of_week = datetime.datetime.now().strftime('%a')
         if date_of_week == 'Sat' or date_of_week == 'Sun' or device.vacation_mode:
-            print ('Do not turn Nest on')
+            print('Do not turn Nest on')
             return
         structure_id = device.structure_id
         url = "https://developer-api.nest.com/structures/%s/away?auth=%s" % (structure_id, auth.access_token)
         res = requests.put(url, json="home")
-        print (res.status_code, res.json())
+        print(res.status_code, res.json())
 
     def get_access_token(self, auth):
         auth_code = auth.auth_code

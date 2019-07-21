@@ -19,7 +19,6 @@ def get_access_token():
                         'client_id=%s&code=%s&client_secret=%s' \
                         '&grant_type=authorization_code' % (client_id, auth_code, client_secret)
 
-
     resp = requests.post(request_token_url)
     content = json.loads(resp.content)
     auth.access_token = content['access_token']

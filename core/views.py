@@ -20,8 +20,8 @@ def simplisafe_away(request):
 
 
 def set_simplisafe_state(state):
-    cookie_dict, uid, session_name = simplisafe_login()
-    location_data = {"no_persist": 0, "XDEBUG_SESSION_START": session_name}
+    cookie_dict, uid = simplisafe_login()
+    location_data = {"no_persist": 0, "XDEBUG_SESSION_START": "session_name"}
     location_resp = requests.post('https://simplisafe.com/mobile/%s/locations' % uid,
                                   data=location_data, cookies=cookie_dict)
     lid = None
@@ -34,8 +34,7 @@ def set_simplisafe_state(state):
                 print(location_resp.json())
                 continue
     else:
-        print('Error location:%s' % location_resp.status_code )
-
+        print('Error location:%s' % location_resp.status_code)
 
     if not lid:
         return None
@@ -49,24 +48,18 @@ def set_simplisafe_state(state):
 
 def simplisafe_login():
     logger.info('Logging in Simplisafe')
+    ses = requests.Session()
     login_request_data = {"name": os.environ.get('SIMPLISAFE_USERNAME'),
-                    "pass": os.environ.get('SIMPLISAFE_PASSWORD'),
-                    "device_uuid": "51644e80-1b62-11e3-b773-0800200c9a66",
-                    "no_persist": 1,
-                    "version": "1200"}
+                          "pass": os.environ.get('SIMPLISAFE_PASSWORD'),
+                          "device_uuid": "51644e80-1b62-11e3-b773-0800200c9a66",
+                          "no_persist": 1,
+                          "version": "1200"}
 
-    login_info = requests.post('https://simplisafe.com/mobile/login/', data=login_request_data)
+    login_info = ses.post('https://simplisafe.com/mobile/login/', data=login_request_data)
     data = login_info.json()
-
+    cookies = login_info.cookies.get_dict()
     uid = data.get('uid')
-    session_name = data.get('session')
-
-    cookie_key = login_info.cookies.keys()[1]
-    cookie_value = login_info.cookies[cookie_key]
-    cookie_dict = dict()
-    cookie_dict[cookie_key] = cookie_value
-    print('Login Info: %s, Cookie: %s' % (data, cookie_dict))
-    return cookie_dict, uid, session_name
+    return cookies, uid
 
 
 def home(request):
@@ -88,13 +81,3 @@ def set_vacation(request):
             device.vacation_mode = False
             device.save()
             return HttpResponse('Turn Off Vacation', status=200)
-
-
-
-
-
-
-
-
-
-
