@@ -1,4 +1,3 @@
-import json
 import logging
 import os
 
@@ -6,7 +5,6 @@ from django.http import Http404
 from django.http import HttpResponse
 import requests
 from core.models import Location, NestAuth, Device
-from django.shortcuts import render_to_response, render
 
 logger = logging.getLogger(__name__)
 
