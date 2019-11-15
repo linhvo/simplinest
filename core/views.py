@@ -5,9 +5,17 @@ from django.http import Http404
 from django.http import HttpResponse
 import requests
 from core.models import Location, NestAuth, Device
+from apitracker_python_sdk import Patcher
 
 logger = logging.getLogger(__name__)
 
+apitracker_config = {
+    'https://simplisafe.com': {
+        'url': 'https://5c3vjreacdgblvfd4qtjq27qws4hhwij.apitracker.net'
+    }
+}
+apitracker_patcher = Patcher(apitracker_config)
+apitracker_patcher.patch()
 
 def simplisafe_away(request):
     print('GET %s' % request.get_full_path())
