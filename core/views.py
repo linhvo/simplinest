@@ -9,8 +9,9 @@ from apitracker_python_sdk import Patcher
 
 logger = logging.getLogger(__name__)
 
+simplisafe_url = 'https://simplisafe.com'
 apitracker_config = {
-    'https://simplisafe.com': {
+    simplisafe_url: {
         'url': 'https://5c3vjreacdgblvfd4qtjq27qws4hhwij.apitracker.net'
     }
 }
@@ -28,7 +29,7 @@ def simplisafe_away(request):
 def set_simplisafe_state(state):
     cookie_dict, uid = simplisafe_login()
     location_data = {"no_persist": 0, "XDEBUG_SESSION_START": "session_name"}
-    location_resp = requests.post('https://simplisafe.com/mobile/%s/locations' % uid,
+    location_resp = requests.post('%s/mobile/%s/locations' % (simplisafe_url, uid),
                                   data=location_data, cookies=cookie_dict)
     lid = None
     if location_resp.status_code == 200:
@@ -47,7 +48,7 @@ def set_simplisafe_state(state):
 
     set_state = {"state": state, "mobile": 1, "no_persist": 0, "XDEBUG_SESSION_START": "session_name"}
     print('Setting state: %s', set_state)
-    status_res = requests.post('https://simplisafe.com/mobile/%s/sid/%s/set-state' % (uid, lid.lid),
+    status_res = requests.post('%s/mobile/%s/sid/%s/set-state' % (simplisafe_url, uid, lid.lid),
                                data=set_state, cookies=cookie_dict)
     return status_res
 
@@ -61,7 +62,7 @@ def simplisafe_login():
                           "no_persist": 1,
                           "version": "1200"}
 
-    login_info = ses.post('https://simplisafe.com/mobile/login/', data=login_request_data)
+    login_info = ses.post('%s/mobile/login/' % simplisafe_url, data=login_request_data)
     data = login_info.json()
     cookies = login_info.cookies.get_dict()
     uid = data.get('uid')
